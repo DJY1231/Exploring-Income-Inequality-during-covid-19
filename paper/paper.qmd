@@ -1,11 +1,11 @@
 ---
-title: "How has inflation impacted household spending patterns across different income brackets during the post-COVID recovery period?"
-subtitle: "My subtitle if needed"
+title: "Exploring how Covid-19 impacted income inequality in the United States"
+subtitle: "Insights from 2002 to 2023"
 author: Dong Jun Yoon
 thanks: "Code and data are available at: LINK."
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This paper investigates income inequality in the United States from 2002 to 2023 using data from the United States Census and the World Inequality Database (WID). Throughout the paper, we will explore trends in income inequality, examining whether it is increasing or decreasing over time, and how the Covid-19 of 2020-2023 affected income inequality. We will utilize data analysis and regression modeling to investigate these trends. Investigating these trends is significant, as it could assist policymakers or the government in developing strategies that could decrease the inequalities occurring within the country. As a result, this report may be used to help promote social and economic equity in the United States."
 format: pdf
 number-sections: true
 bibliography: references.bib
