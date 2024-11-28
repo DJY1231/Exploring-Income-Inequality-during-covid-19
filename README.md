@@ -1,11 +1,7 @@
 # Starter folder
 
 ## Overview
-
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
-
-To use this folder, click the green "Code" button", then "Download ZIP". Move the downloaded folder to where you want to work on your own computer, and then modify it to suit.
-
+This paper investigates income inequality in the United States from 2002 to 2023 using data from the United States Census and the World Inequality Database (WID). Throughout the paper, we will explore trends in income inequality, examining whether it is increasing or decreasing over time, and how the Covid-19 of 2020-2023 affected income inequality. We will utilize data analysis and regression modeling to investigate these trends. Investigating these trends is significant, as it could assist policymakers or the government in developing strategies that could decrease the inequalities occurring within the country. As a result, this report may be used to help promote social and economic equity in the United States.
 
 ## File Structure
 
