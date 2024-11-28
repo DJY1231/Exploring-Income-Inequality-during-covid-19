@@ -1,5 +1,5 @@
 ---
-title: "Analyzing Income Inequality Trends in the Canada: Impacts of the COVID-19 Pandemic and Policy Implications"
+title: "Analyzing and Comparing Income Inequality Trends in the Canada: Impacts of the COVID-19 Pandemic and The Great Recession"
 subtitle: "Insights from 2002 to 2023"
 author: Dong Jun Yoon
 thanks: "Code and data are available at: https://github.com/DJY1231/Exploring_Income_Inequality_During_Covid_19.git."
