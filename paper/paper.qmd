@@ -1,5 +1,5 @@
 ---
-title: "Exploring how Covid-19 impacted income inequality in the United States"
+title: "Analyzing Income Inequality Trends in the United States: Impacts of the COVID-19 Pandemic and Policy Implications"
 subtitle: "Insights from 2002 to 2023"
 author: Dong Jun Yoon
 thanks: "Code and data are available at: LINK."
