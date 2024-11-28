@@ -1,7 +1,7 @@
-# Exploring_Income_Inequality_in_Canada_During_Covid_19
+# Exploring_Income_Inequality_in_Canada_During_Recessions
 
 ## Overview
-This paper investigates income inequality in the United States from 2002 to 2023 using data from the United States Census and the World Inequality Database (WID). Throughout the paper, we will explore trends in income inequality, examining whether it is increasing or decreasing over time, and how the Covid-19 of 2020-2023 affected income inequality. We will utilize data analysis and regression modeling to investigate these trends. Investigating these trends is significant, as it could assist policymakers or the government in developing strategies that could decrease the inequalities occurring within the country. As a result, this report may be used to help promote social and economic equity in the United States.
+This paper investigates income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID). Throughout the paper, we will explore trends in income inequality, examining whether it is increasing or decreasing over time, and how the Great Recession of 2007-2009 and the Covid-19 of 2020-2023 affected income inequality. We will utilize data analysis and regression modeling to investigate these trends. Investigating these trends is significant, as it could assist policymakers or the government in developing strategies that could decrease the inequalities occurring within the country. As a result, this report may be used to help promote social and economic equity in Canada.
 
 ## File Structure
 
