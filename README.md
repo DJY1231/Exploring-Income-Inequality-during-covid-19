@@ -1,7 +1,7 @@
 # Exploring_Income_Inequality_in_Canada_During_Major_Recessions
 
 ## Overview
-This paper investigates income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID). Throughout the paper, we will explore trends in income inequality, examining whether it is increasing or decreasing over time, and how the Great Recession of 2007-2009 and the Covid-19 of 2020-2023 affected income inequality. We will utilize data analysis and regression modeling to investigate these trends. Investigating these trends is significant, as it could assist policymakers or the government in developing strategies that could decrease the inequalities occurring within the country. As a result, this report may be used to help promote social and economic equity in Canada.
+This paper examines income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID) and Statistics Canada. Throughout the analysis, we explore trends in income inequality and inflation, assessing whether it has increased or decreased over time, and compare the impacts of the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023) on income disparities. Data analysis and regression modeling are utilized to investigate these trends. Understanding these patterns is significant, as it could help policymakers and the government develop strategies to reduce inequalities within the country. Consequently, this report aims to support efforts to promote social and economic equity in Canada.
 
 ## File Structure
 
