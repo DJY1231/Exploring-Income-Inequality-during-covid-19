@@ -1,107 +1,219 @@
 ---
-title: "Analyzing and Comparing Income Inequality Trends in the Canada: Impacts of the Great Recession and COVID-19 Pandemic"
+title: "Analyzing Income Inequality Trends in the Canada: Impacts of the COVID-19 Pandemic and Policy Implications"
 subtitle: "Insights from 2002 to 2023"
 author: Dong Jun Yoon
-thanks: "Code and data are available at: https://github.com/DJY1231/Exploring_Income_Inequality_During_Covid_19.git."
+thanks: "Code and data are available at: https://github.com/DJY1231/Exploring_Income_Inequality_in_Canada_During_Major_Recessions.git"
 date: today
 date-format: long
-abstract: "This paper investigates income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID). Throughout the paper, we will explore trends in income inequality, examining whether it is increasing or decreasing over time, and how the Great Recession of 2007-2009 and the Covid-19 of 2020-2023 affected income inequality. We will utilize data analysis and regression modeling to investigate these trends. Investigating these trends is significant, as it could assist policymakers or the government in developing strategies that could decrease the inequalities occurring within the country. As a result, this report may be used to help promote social and economic equity in Canada."
+abstract: "This paper examines income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID) and Statistics Canada. Throughout the analysis, we explore trends in income inequality and inflation, assessing whether it has increased or decreased over time, and compare the impacts of the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023) on income disparities. Data analysis and regression modeling are utilized to investigate these trends. Understanding these patterns is significant, as it could help policymakers and the government develop strategies to reduce inequalities within the country. Consequently, this report aims to support efforts to promote social and economic equity in Canada."
 format: pdf
 number-sections: true
 bibliography: references.bib
 ---
-
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
-```
-
-
 # Introduction
 Income inequality is a critical issue both in Canada and all around the world. Income inequality refers to the difference in how income is distributed among the population, highlighting significant disparities in financial well-being. Unlike wealth inequality, which considers the value of assets such as homes, stocks, and other holdings, income inequality specifically examines earnings from sources like wages, salaries, savings interest, stock dividends, rental income, and profits from the sale of assets. This distinction is essential for understanding the multifaceted nature of economic disparities. Gaining a deeper understanding of income inequality can equip policymakers and researchers with valuable insights to develop strategies aimed at addressing this pervasive problem.
 
-This paper focuses on the dynamics of income inequality in Canada, especially focusing on the period from 2002 to 2023. Using the dataset provided by World Inequality Database (WID), the paper will fully investigate income trends across the social class, top 1%, top 10% and bottom 50% of income inequality. Moreover, will be considering variables such as year, social class, and race to find out the correlation between these factors. 
+This paper focuses on the dynamics of income inequality in Canada, especially focusing on the period from Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023). Using the dataset provided by World Inequality Database (WID), the paper will fully investigate income trends across the social class, top 1%, top 10% and bottom 50% of income inequality. Moreover, will be considering variables such as year, social class, and race to find out the correlation between these factors. 
 
 To efficiently investigate remaining income gap between individual firms and social classes who are living in Canada, this paper will focus on exploring datasets and multiple linear regression modeling to find out the full details (trends, patterns) about income inequality that is occurring in Canada. 
 
 The paper is structured as following: Section 2 introduces the data used for analysis and findings, including the variables of interest. Section 3 introduces the linear regression model to examine the correlation between time (year) and social class to investigate income inequality in Canada. Section 4 introduces the full analysis of the table which will include the summary. Section 5 may discuss about the findings that we investigated and also talk about the weaknesses of this paper and its next steps.
 
+## Estimand
+
+The goal of this paper is to find out the relationship between income inequality and time, measured in years in Canada, focusing on how it changes over the years affect income inequality. Furthermore, this paper investigates whether the Great Recession (2007–2009) or the COVID-19 pandemic (2020–2023) has caused more income inequality between each social classes. The measurement uses data from the World Inequality Database (WID) to graph the income inequality trends from 2002 to 2023. And also uses data from Statistic Canada to investigate the inflation rate within each year.
+
+Thus this paper highlights the trend of income inequality between time, social class, and inflation within Canada.
 
 # Data {#sec-data}
+## Data source
+The data is gathered from World Inequality Database (WID) which introduces the income share by each social class over time: 2002 to 2023 in Canada. The second data is gathered from statistics Canada where the data illustrates the  Consumer Price Index (CPI) to figure out the inflation rate within each year.
+이거 수정
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+## Data mearsurement
+The dataset provides information that offers insights into the income inequality trends in Canada. The y-axis represents the income share, measured in dollars (%) while the x-axis corresponds to the years from 2002 to 2023, representing the total income share for each year.
 
+Data cleaning and analysis were conducted using the base statistical programming language R (R Core Team 2023), and the core components such as tidyverse (Wickham et al. 2019), ggplot2 (Wickham 2016), dplyr (Wickham et al. 2023), readr (Wickham, Hester, and Bryan 2024), tibble (Müller and Wickham 2023),stringr (Wickham 2023), haven (Wickham, Miller, and Smith 2023), janitor (Firke 2023), knitr (Xie 2023).
+
+## Variables of Interest
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
+# Load the necessary library
+library(knitr)
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+# Load the data from CSV
+data <- read.csv("Income_inequality_social_class.csv")
+
+# Extracting the first ten rows for the table
+data_subset <- head(data, 40)
+
+# Use kable to create a nicely formatted table in Markdown
+kable(data_subset, caption = "First 40 rows of Income Share by Social Class Over Time: 2002 to 2023 in Canada.", format = "markdown")
 ```
+Table 1: The first 40 rows of Income Share by social class over time: 2002 to 2023 in Canada. 
 
-Talk more about it.
+1. Location: The model uses all the dataset collected across Canada. This geographic coverage enables us to access different social class with different income level.   
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+2. Social Class: The dataset contains information on income levels for each social class, including Top 1% income, Top 10% income and bottom 50% income. These income levels provide detailed insights into income distribution across different years and shares of total income in Canada.
 
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
+3. Year: The dataset covers the years from 2002 to 2023, allowing for the exploration of long-term income inequality trends and changes over time. This period encompasses the time between two major recessions—the Great Recession and the COVID-19 pandemic—providing valuable insights into patterns and income distribution during these economic events.
 
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+4. Share of total income: The dataset likely represents the share of pre tax total income earned by specified social classes (e.g., "Top 1% income") in Canada for each year. For instance, a value of 0.1279 for "Top 1% income" in Canada in 2002 indicates that the top 1% of earners received 12.79% of the total income generated in the country that year. This data is significant because it reveals trends in how the income shares of different social classes change over time.
 
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+## Data Visualization 
+```{r results='hide', message=FALSE, warning=FALSE}
+library(ggplot2)
+
+# Load the data
+data <- read.csv("Income_inequality_social_class.csv")
+
+# Rename the 'Unnamed: 3' column to 'Income Share'
+colnames(data)[4] <- "Income Share"
+
+# Plotting the data
+ggplot(data, aes(x = Year, y = `Income Share`, color = Social_Class, group = Social_Class)) +
+  geom_line() +
+  facet_wrap(~Country, scales = 'free_y') +
+  labs(title = "Income Share by Social Class Over Time",
+       x = "Year",
+       y = "Income Share (%)",
+       color = "Social Class") +
+  theme_minimal()
 ```
+Figure 1: Income Share by Social Class Over Time: 2002 to 2023 in Canada.
 
-Talk way more about it. 
+Figure 1 displays the trend of income distribution across different social classes in Canada from 2002 to 2023. The data indicates a downward trend in the income share for the top 1% and top 10% of earners during the period from 2002 to 2016, suggesting that these groups lost a portion of their total income share during that time. However, between 2016 and 2023, the total income share for these groups increased. Conversely, the bottom 50% of earners experienced a slight increase in their total income share over the entire period, reflecting a modest improvement in their economic position. The decreasing trend in the income share for the top 1% and top 10%, alongside the increased share for the bottom 50%, suggests that income inequality in Canada gradually decreased during the period from 2002 to 2016, with the bottom 50% receiving a slightly larger share of overall economic growth. However, after 2016, the trend appears to reverse, indicating a rise in income inequality as the top income groups regained a larger share of total income.
 
+```{r results='hide', message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(zoo) # For moving averages
 
+# Load the data
+data <- read.csv("Income_inequality_social_class.csv")
+
+# Rename the 'Unnamed: 3' column to 'Income Share'
+colnames(data)[4] <- "Income Share"
+
+# Convert Year column to integer to remove .0
+data$Year <- as.integer(as.numeric(data$Year))
+
+# Filter the data for years 2007 to 2009
+filtered_data <- data %>%
+  filter(Year >= 2007 & Year <= 2009)
+
+# Add a moving average column for trends
+filtered_data <- filtered_data %>%
+  group_by(Country, Social_Class) %>%
+  mutate(Moving_Avg = rollmean(`Income Share`, k = 3, fill = NA))
+
+# Plot with smoothed lines, moving averages, and facets
+ggplot(filtered_data, aes(x = Year, y = `Income Share`, color = Social_Class, group = Social_Class)) +
+  geom_point(size = 2) + # Add points for individual data
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", alpha = 0.8) + # Smoothed lines for trends
+  geom_line(aes(y = Moving_Avg), size = 1.2, linetype = "solid") + # Moving average line
+  facet_wrap(~Country + Social_Class, scales = 'free_y') + # Facet by Country and Social Class
+  scale_x_continuous(breaks = unique(filtered_data$Year), labels = as.character(unique(filtered_data$Year))) +
+  labs(title = "Income Share during the Great recession (2007-2009)",
+       x = "Year",
+       y = "Income Share (%)",
+       color = "Social Class") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom", # Adjust legend position
+        strip.text = element_text(size = 10, face = "bold")) # Style facet labels
+
+```
+Figure 2: Income Share by Social Class during the Great repression: 2007 to 2009 in Canada.
+
+Figure 2 illustrates the trend of income distribution across different social classes in Canada from 2007 to 2009, during the Great Recession. One notable trend is the downward shift in the income share for the top 1% and top 10% of earners, alongside an upward trend in the income share for the bottom 50% of earners during this period. This trend suggests that the top 1% and top 10% groups lost a portion of their total income share during this time. Specifically, the income share of the top 1% decreased by 2.35 percentage points, from 14.21% to 11.86% of the total income pie. Similarly, the top 10% experienced a decrease of 2.5 percentage points, from 38.38% to 35.88%. This indicates that the top 10% group was economically affected more than the top 1%. In contrast, the bottom 50% showed an increase in income share, with their portion rising by 0.48 percentage points, from 16.75% to 17.23% of the total income pie.
+
+```{r results='hide', message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(zoo) # For moving averages
+
+# Load the data
+data <- read.csv("Income_inequality_social_class.csv")
+
+# Rename the 'Unnamed: 3' column to 'Income Share'
+colnames(data)[4] <- "Income Share"
+
+# Convert Year column to integer to remove .0
+data$Year <- as.integer(as.numeric(data$Year))
+
+# Filter the data for years 2020 to 2023
+filtered_data <- data %>%
+  filter(Year >= 2020 & Year <= 2023)
+
+# Add a moving average column for trends
+filtered_data <- filtered_data %>%
+  group_by(Country, Social_Class) %>%
+  mutate(Moving_Avg = rollmean(`Income Share`, k = 3, fill = NA))
+
+# Plot with smoothed lines, moving averages, and facets
+ggplot(filtered_data, aes(x = Year, y = `Income Share`, color = Social_Class, group = Social_Class)) +
+  geom_point(size = 2) + # Add points for individual data
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", alpha = 0.8) + # Smoothed lines for trends
+  geom_line(aes(y = Moving_Avg), size = 1.2, linetype = "solid") + # Moving average line
+  facet_wrap(~Country + Social_Class, scales = 'free_y') + # Facet by Country and Social Class
+  scale_x_continuous(breaks = unique(filtered_data$Year), labels = as.character(unique(filtered_data$Year))) +
+  labs(title = "Income Share during Covid-19 (2020-2023)",
+       x = "Year",
+       y = "Income Share (%)",
+       color = "Social Class") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom", # Adjust legend position
+        strip.text = element_text(size = 10, face = "bold")) # Style facet labels
+
+```
+Figure 3: Income Share by Social Class during the Covid-19: 2020 to 2023 in Canada.
+
+Figure 3 illustrates the trend of income distribution across different social classes in Canada from 2020 to 2023, during the COVID-19 pandemic. One noticeable trend is the upward shift in income share from 2020 to 2021, followed by a consistent income share for all social classes (top 1%, top 10%, and bottom 50% of earners) afterward. This trend suggests that all social classes benefited from an increase in total income share during this time. However, to determine who benefited the most and assess income inequality between the social classes, it is necessary to consider the percentage increases. Specifically, the income share of the top 1% increased by 1.03 percentage points, rising from 10.59% to 11.62% of the total income pie. Similarly, the income share of the top 10% increased by 1.04 percentage points, from 35.18% to 36.22%. This indicates that the top 10% group benefited slightly more than the top 1% by 0.01 percentage points. Meanwhile, the bottom 50% experienced an increase in income share of 0.52 percentage points, from 16.91% to 17.43%. Comparing the magnitude of these increases, the top 1% and top 10% benefited more than the bottom 50%, highlighting a persistent income inequality gap during the COVID-19 pandemic.
+
+```{r results='hide', message=FALSE, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+
+# Load the data
+cpi_data <- read.csv("CPI_CANADA.csv")
+
+# Plot the trend of CPI with a legend
+ggplot(cpi_data, aes(x = YEAR, y = VALUE, color = "CPI")) + # Add a legend label
+  geom_line(size = 1) + # Line chart for CPI trend
+  labs(title = "Trend of CPI in Canada (2002-2023)",
+       x = "Year",
+       y = "Consumer Price Index (CPI)",
+       color = "Legend") + # Legend title
+  theme_minimal(base_size = 12) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+Figure 4: Consumer Price Index (CPI) over time: 2002 to 2023 in Canada.
+
+Figure 4 illustrates the trend of the Consumer Price Index (CPI) in Canada from 2002 to 2023. The CPI shows a consistent upward trend over this period, indicating that consumer prices have steadily increased. This trend suggests that rising consumer prices are associated with an increase in the inflation rate. In other words, as the inflation rate rises, purchasing power, defined as the ability to buy products and services decreases.
 
 # Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+This section will discuss the multiple linear regression meodl that will be used for the paper analysis. 
 
 ## Model set-up
+The multiple linear regression model is as follows: 
+$$
+\begin{align*}
+\text{Share\_of\_total\_income} (Y) &= \beta_0 + \beta_1 \cdot \text{Year} + \beta_2 \cdot \text{Social\_Class} \\
+&\quad + \beta_3 \cdot \text{Period} + \beta_4 \cdot (\text{Year} \times \text{Social\_Class}) \\
+&\quad + \beta_5 \cdot (\text{Social\_Class} \times \text{Period}) + \varepsilon
+\end{align*}
 
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
+$$
 ### Model justification
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
+We expect a capture the relationship between the response variable, Y, representing the share of income based on each social class.
+- $\beta_0$ is the overall intercept.
+- $\beta_1$ represents the trend of pre tax total income share over time.
+- $\beta_2$ represents the differences in pre tax total income share across different social classes.
+- $\beta_3$ represents the impact of the economic period on income share.
+- $\beta_4$ and $\beta_5$ are interaction terms that capture the nuanced effects of time and economic periods on different social classes.
+- $\varepsilon$ is the error term.
 
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
+The choice of priors for the coefficients, $\beta_0$, $\beta_1$, and $\beta_3$, $\beta_4$, $\beta_5$ as Normal distributions with mean 0 and a standard deviation of 2.5 reflects a weak prior assumption. This indicates that there are no strong preconceptions regarding the size or direction of their impacts.
 
 # Results
 
