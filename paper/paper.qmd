@@ -1,17 +1,17 @@
 ---
-title: "Analyzing Income Inequality Trends in the Canada: Impacts of the COVID-19 Pandemic and Policy Implications"
+title: "Analyzing Income Inequality Trends in the Canada: Impacts of the Great Recession (2007-2009) and COVID-19 Pandemic (2020-2023)"
 subtitle: "Insights from 2002 to 2023"
 author: Dong Jun Yoon
 thanks: "Code and data are available at: https://github.com/DJY1231/Exploring_Income_Inequality_in_Canada_During_Major_Recessions.git"
 date: today
 date-format: long
-abstract: "This paper examines income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID) and Statistics Canada. Throughout the analysis, we explore trends in income inequality and inflation, assessing whether it has increased or decreased over time, and compare the impacts of the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023) on income disparities. Data analysis and regression modeling are utilized to investigate these trends. Understanding these patterns is significant, as it could help policymakers and the government develop strategies to reduce inequalities within the country. Consequently, this report aims to support efforts to promote social and economic equity in Canada."
+abstract: "This paper examines income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID) and Statistics Canada. The analysis explores trends in income inequality and inflation, assessing whether these disparities have increased or decreased over time. It also compares the impacts of the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023) on income disparities. Through data analysis and regression modeling, this study investigates these trends in depth. Understanding these patterns is crucial for policymakers and the government to develop effective strategies aimed at reducing inequalities within the country. This report ultimately seeks to contribute to efforts promoting social and economic equity in Canada."
 format: pdf
 number-sections: true
 bibliography: references.bib
 ---
 # Introduction
-Income inequality is a critical issue both in Canada and all around the world. Income inequality refers to the difference in how income is distributed among the population, highlighting significant disparities in financial well-being. Unlike wealth inequality, which considers the value of assets such as homes, stocks, and other holdings, income inequality specifically examines earnings from sources like wages, salaries, savings interest, stock dividends, rental income, and profits from the sale of assets. This distinction is essential for understanding the multifaceted nature of economic disparities. Gaining a deeper understanding of income inequality can equip policymakers and researchers with valuable insights to develop strategies aimed at addressing this pervasive problem.
+Income inequality is a significant issue both in Canada and all around the world. Income inequality refers to the difference in how income is distributed among the population, highlighting significant disparities in financial well-being. Unlike wealth inequality, which considers the value of assets such as homes, stocks, and other holdings, income inequality specifically examines earnings from sources like wages, salaries, savings interest, stock dividends, rental income, and profits from the sale of assets. This distinction is essential for understanding the multifaceted nature of economic disparities. Gaining a deeper understanding of income inequality can equip policymakers and researchers with valuable insights to develop strategies aimed at addressing this pervasive problem.
 
 This paper focuses on the dynamics of income inequality in Canada, especially focusing on the period from Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023). Using the dataset provided by World Inequality Database (WID), the paper will fully investigate income trends across the social class, top 1%, top 10% and bottom 50% of income inequality. Moreover, will be considering variables such as year, social class, and race to find out the correlation between these factors. 
 
@@ -197,76 +197,142 @@ This section will discuss the multiple linear regression meodl that will be used
 The multiple linear regression model is as follows: 
 $$
 \begin{align*}
-\text{Share\_of\_total\_income} (Y) &= \beta_0 + \beta_1 \cdot \text{Year} + \beta_2 \cdot \text{Social\_Class} \\
-&\quad + \beta_3 \cdot \text{Period} + \beta_4 \cdot (\text{Year} \times \text{Social\_Class}) \\
-&\quad + \beta_5 \cdot (\text{Social\_Class} \times \text{Period}) + \varepsilon
+\text{Share_of_total_income}(Y) &= \beta_0 + \beta_1 \cdot \text{Year} + \beta_2 \cdot \text{Social_Class} \\
+&\quad + \beta_3 \cdot \text{Period} + \beta_4 \cdot (\text{Year} \times \text{Social_Class}) \\
+&\quad + \beta_5 \cdot (\text{Social_Class} \times \text{Period}) + \varepsilon
 \end{align*}
-
 $$
 ### Model justification
 
-We expect a capture the relationship between the response variable, Y, representing the share of income based on each social class.
-- $\beta_0$ is the overall intercept.
-- $\beta_1$ represents the trend of pre tax total income share over time.
-- $\beta_2$ represents the differences in pre tax total income share across different social classes.
-- $\beta_3$ represents the impact of the economic period on income share.
-- $\beta_4$ and $\beta_5$ are interaction terms that capture the nuanced effects of time and economic periods on different social classes.
-- $\varepsilon$ is the error term.
+We aim to model the relationship between the response variable Y, which represents the share of income for each social class, using the following components:
 
-The choice of priors for the coefficients, $\beta_0$, $\beta_1$, and $\beta_3$, $\beta_4$, $\beta_5$ as Normal distributions with mean 0 and a standard deviation of 2.5 reflects a weak prior assumption. This indicates that there are no strong preconceptions regarding the size or direction of their impacts.
+- $\beta_0$: The overall intercept of the model.
+- $\beta_1$: The trend of pre-tax total income share over time.
+- $\beta_2$: The differences in pre-tax total income share across various social classes.
+- $\beta_3$: The effect of the economic period on income share.
+- $\beta_4$ and $\beta_5$: Interaction terms that account for the combined influence of time and economic periods on different social classes.
+- $\varepsilon$: The error term, representing unaccounted variability in the model.
+
+The selection of priors for the coefficients, $\beta_0$, $\beta_1$, $\beta_3$, $\beta_4$, and $\beta_5$ as Normal distributions with a mean of 0 and a standard deviation of 2.5 reflects a weakly informative prior. This approach signifies an absence of strong assumptions about the magnitude or direction of their effects.
 
 # Results
-
-Our results are summarized in @tbl-modelresults.
-
+The regression results are as following:
 ```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(stargazer)
 
-library(rstanarm)
+# Load the dataset
+income_data <- read.csv("Income_inequality_social_class.csv")
 
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
-```
+# Define the periods for comparison: Great Recession, COVID-19, and Other
+income_data <- income_data %>%
+  mutate(
+    Period = case_when(
+      Year >= 2007 & Year <= 2009 ~ "Great Recession",
+      Year >= 2020 & Year <= 2023 ~ "COVID-19",
+      TRUE ~ "Other"
+    )
+  )
 
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
+# Convert relevant columns to factors
+income_data$Social_Class <- factor(income_data$Social_Class, 
+                                   levels = c("Bottom 50% income", "Top 10% income", "Top 1% income"))
+income_data$Period <- factor(income_data$Period, 
+                             levels = c("Great Recession", "COVID-19", "Other"))
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
+# Create binary indicator variables for each period
+income_data <- income_data %>%
+  mutate(
+    Great_Recession = ifelse(Period == "Great Recession", 1, 0),
+    COVID_19 = ifelse(Period == "COVID-19", 1, 0),
+    Other_Period = ifelse(Period == "Other", 1, 0)  # Include 'Other' for completeness
+  )
+
+# Ensure no missing data in key columns
+income_data <- income_data %>%
+  filter(!is.na(Share_of_total_income) & !is.na(Social_Class) & !is.na(Period))
+
+# Run the regression model with explicit interactions
+model <- lm(
+  Share_of_total_income ~ Year + Social_Class +
+    Great_Recession + COVID_19 + Other_Period +
+    Year:Social_Class +
+    Social_Class:Great_Recession +
+    Social_Class:COVID_19 +
+    Social_Class:Other_Period,
+  data = income_data
 )
+
+# Display the regression results in a table with all combinations included
+stargazer(model, type = "text", title = "Regression Results: Income Inequality During Great Recession and COVID-19", 
+          dep.var.labels = "Share of Total Income",
+          covariate.labels = c("Year", 
+                               "Top 1% Income", 
+                               "Top 10% Income", 
+                               "Bottom 50% Income",
+                               "Great Recession", 
+                               "COVID-19",
+                               "Other Period",
+                               "Year x Top 1% Income", 
+                               "Year x Top 10% Income", 
+                               "Year x Bottom 50% Income",
+                               "Top 1% Income x Great Recession", 
+                               "Top 10% Income x Great Recession", 
+                               "Bottom 50% Income x Great Recession",
+                               "Top 1% Income x COVID-19", 
+                               "Top 10% Income x COVID-19", 
+                               "Bottom 50% Income x COVID-19",
+                               "Top 1% Income x Other Period", 
+                               "Top 10% Income x Other Period", 
+                               "Bottom 50% Income x Other Period"),
+          omit.stat = c("f", "ser"))
+
 ```
+Table 2: Summary results for the share of total income model
 
+This table summarize the output of the multiple linear regression model that estimates the share of total income based on different predictors: year, social class (top 1% income, top 10% income, and bottom 50% income), periods (The Great recession and Covid-19 pandemic), and interaction terms between these predictors.
 
+Social Class (top 1% income, top 10% income, and bottom 50% income): Both coefficients for top 1% income (5.194) and top 10% income (5.192) are positive. Meaning that these groups have a higher share of total income relative to the reference group (Bottom 50% Income, in this case). This indicates that the wealthiest groups (Top 1% and Top 10%) contribute significantly to income inequality, as they command a larger portion of the income pie. On the other hand, a negative coefficient for the Bottom 50% Income (-0.001) means that this group contributes a smaller share to the total income. This suggests that the lower-income group has limited access to the total economic growth or benefits from the overall income, which exacerbates income inequality.
 
+Constant: The constant term is not displayed and is also not statistically significant, suggesting that the share of total income is not significantly different from zero.
 
 # Discussion
+This paper examines income inequality in Canada from 2002 to 2023, with a primary focus on analyzing income disparities during two major recessions: the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023). Through data analysis and regression modeling, the findings suggest that income inequality has potentially increased over time, with the income gap between social classes widening.
 
-## First discussion point {#sec-first-point}
+In the discussion section, I will provide a detailed analysis of the results and explore how CPI rates may contribute to increasing or decreasing income inequality.
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+## Comparing income inequality trends during two major recessions: the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023). 
 
-## Second discussion point
+Based on Figure 2, which displays the trend of income distribution across different social classes in Canada from 2007 to 2009, the data indicates a downward trend in the income share for the top 1% and top 10% of earners during the period from 2007 to 2009, suggesting that these groups lost a portion of their total income share during the Great Recession. Specifically, the income share of the top 1% decreased by 2.35 percentage points, from 14.21% to 11.86% of the total income pie. Similarly, the top 10% experienced a decrease of 2.5 percentage points, from 38.38% to 35.88%. During this period, many businesses and small retailers faced significant challenges, forcing them to reduce spending, cut investments, and, in some cases, declare bankruptcy due to low liquidity and limited access to credit. This resulted in widespread job losses, reduced incomes, and an overall economic downturn, ultimately contributing to a contraction in consumer spending and slowing economic recovery.
 
-## Third discussion point
+In contrast, the bottom 50% of earners experienced a slight increase in their total income share during this period. Where the bottom 50% showed an increase in income share, with their portion rising by 0.48 percentage points, from 16.75% to 17.23% of the total income pie. This trend could be attributed to a combination of factors, including government intervention through stimulus packages and unemployment benefits, which provided financial support to lower-income households. Additionally, the top 1% and top 10% earners were disproportionately affected due to their greater reliance on capital markets and asset-based income, which saw significant declines during the financial crisis. The stock market crash and falling real estate values directly impacted high-income groups who held substantial wealth in these asset classes, exacerbating the decline in their income share.
 
-## Weaknesses and next steps
+Moving on, the detailed analysis during the COVID-19 pandemic is shown in Figure 3: Income Share by Social Class During the COVID-19 Pandemic (2020 to 2023) in Canada. Figure 3 illustrates the trend of income distribution across different social classes in Canada during this period. Unlike the Great Recession, where the top 1% and top 10% earners lost a portion of their income share while the bottom 50% benefited, one noticeable trend during the COVID-19 pandemic is the upward shift in income share across all social classes (top 1%, top 10%, and bottom 50% earners). This trend suggests that all social classes benefited from an increase in total income share during this time.
 
-Weaknesses and next steps should also be included.
+To determine who benefited the most and assess income inequality between the social classes, it is necessary to consider the percentage increases. Specifically, the income share of the top 1% increased by 1.03 percentage points, rising from 10.59% to 11.62% of the total income pie. Similarly, the income share of the top 10% increased by 1.04 percentage points, from 35.18% to 36.22%. Meanwhile, the bottom 50% experienced an increase in income share of 0.52 percentage points, from 16.91% to 17.43%. Comparing the magnitude of these increases, the top 1% and top 10% benefited more than the bottom 50%, highlighting a persistent income inequality gap during the COVID-19 pandemic.
 
-\newpage
+This trend can be explained by the unique economic characteristics of the pandemic period. While the top 1% and top 10% earners initially experienced losses due to a significant decline in capital markets and asset values during the early stages of the pandemic, the rapid recovery of the stock market and real estate values later in the period more than offset these losses. The extraordinary fiscal and monetary policies implemented during the pandemic, such as quantitative easing and low interest rates, disproportionately benefited asset holders, leading to a sharper recovery in wealth for higher-income groups. In contrast, while the bottom 50% saw some improvements due to direct government interventions like cash transfers, wage subsidies, and unemployment benefits, these gains were smaller in magnitude compared to the recovery experienced by the wealthiest groups. This disparity underscores the role of asset ownership in shaping income inequality during economic crises and recoveries.
 
-\appendix
+During the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023), income inequality in Canada exhibited contrasting patterns in terms of income share changes among different social classes. During the Great Recession, the income share of the top 1% decreased significantly by 2.35 percentage points (from 14.21% to 11.86%), and the top 10% saw a decline of 2.5 percentage points (from 38.38% to 35.88%). In contrast, the bottom 50% experienced a modest increase of 0.48 percentage points (from 16.75% to 17.23%). These changes indicate that the Great Recession had a redistributive effect, slightly reducing income inequality as higher-income earners bore the brunt of the economic downturn.
+
+On the other hand, the COVID-19 pandemic saw an overall upward trend in income shares for all social classes. The top 1% increased their income share by 1.03 percentage points (from 10.59% to 11.62%), and the top 10% by 1.04 percentage points (from 35.18% to 36.22%). Meanwhile, the bottom 50% experienced a smaller increase of 0.52 percentage points (from 16.91% to 17.43%). While all groups benefited during the pandemic, the gains were disproportionately larger for higher-income earners, exacerbating income inequality.
+
+When comparing the two recessions, the Great Recession had a more significant impact on narrowing income inequality, as the top earners lost a greater share of income while the bottom 50% slightly improved their position. In contrast, the COVID-19 pandemic widened the income gap due to the larger relative gains experienced by the top 1% and 10%, driven by the rapid recovery of asset values such as stocks and real estate. These findings underscore the differing economic dynamics of the two crises, with the Great Recession redistributing income downward and the COVID-19 pandemic reinforcing pre-existing inequalities.
+
+## How Consumer Price Index (CPI) rates may contribute to increasing or decreasing income inequality.
+
+Figure 4 illustrates the trend of the Consumer Price Index (CPI) in Canada from 2002 to 2023. The CPI shows a consistent upward trend over this period, indicating that consumer prices have steadily increased. This trend suggests that rising consumer prices are associated with an increase in the inflation rate. In other words, as the inflation rate rises, purchasing power—defined as the ability to buy products and services—decreases. We measure inflation by the CPI annual growth rate, which directly reflects the increase in the cost of essential goods and services.
+
+Rising inflation and its connection to income inequality is a significant concern. Income inequality is problematic because it concentrates wealth and power in the hands of the rich, reducing opportunities for social or economic mobility for large segments of the population. This can exacerbate the financial strain on lower-income households, particularly during periods of high inflation, as these groups typically spend a larger proportion of their income on necessities such as housing, food, and energy. The combination of rising prices and stagnant wages can result in a higher cost of living, leading to increased hardship, diminished quality of life, and heightened financial insecurity for many. Moreover, high levels of income inequality are often associated with societal challenges, including increased crime rates, mental health issues, and social unrest, further emphasizing the need to address its root causes.
+
+## Weaknesses and Limitations
+
+While the analysis provides valuable insights, several limitations remain. First, it relies on aggregated data that may mask important regional or demographic variations in income inequality trends. For example, certain provinces or industries in Canada may have experienced different degrees of impact during these recessions. Second, the analysis focuses on income share percentages but does not focuses into the absolute changes in wealth or income levels, which could provide a more comprehensive picture of inequality. Additionally, while the regression modeling captures general trends, it may not fully account for other confounding factors, such as shifts in taxation policies, labor market dynamics, or global economic conditions, which also influence income distribution. Lastly, the analysis does not explore the long-term implications of these recessions, such as their effects on intergenerational mobility or wealth accumulation.
+
+## Future Steps
+To deepen our understanding of income inequality, future research should incorporate more data, such as regional or demographic-specific trends, to uncover disparities within sub populations. Additionally, examining absolute changes in wealth and income alongside percentage shifts would provide a more direct perspective on the economic impacts of recessions. Further studies should also explore the role of policy interventions, such as fiscal policy, taxation, and social safety nets, in shaping inequality trends and assess their effectiveness in mitigating disparities. Another important area of exploration is the long-term effects of income inequality on economic mobility, societal cohesion, and overall well-being. For example, investigating how recessions affect access to education, healthcare, and job opportunities for different income groups could shed light on structural barriers that perpetuate inequality. Finally, integrating measures of wealth inequality, such as asset ownership and debt levels, would complement the income-focused analysis and provide a broader understanding of economic disparities in Canada. Addressing these gaps would not only enhance our knowledge but also inform the development of more equitable economic policies in the future.
 
 # Appendix {-}
 
