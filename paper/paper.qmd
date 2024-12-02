@@ -31,9 +31,9 @@ The data is gathered from World Inequality Database (WID) which introduces the i
 이거 수정
 
 ## Data mearsurement
-The dataset provides information that offers insights into the income inequality trends in Canada. The y-axis represents the income share, measured in dollars (%) while the x-axis corresponds to the years from 2002 to 2023, representing the total income share for each year.
+The dataset provides information that offers insights into the income inequality trends in Canada. The y-axis represents the income share, measured in dollars (%) while the x-axis corresponds to the years from 2002 to 2023, representing the share of pre tax total income for each year.
 
-Data cleaning and analysis were conducted using the base statistical programming language R (R Core Team 2023), and the core components such as tidyverse (Wickham et al. 2019), ggplot2 (Wickham 2016), dplyr (Wickham et al. 2023), readr (Wickham, Hester, and Bryan 2024), tibble (Müller and Wickham 2023),stringr (Wickham 2023), haven (Wickham, Miller, and Smith 2023), janitor (Firke 2023), knitr (Xie 2023).
+Data cleaning and analysis were conducted using the base statistical programming language R (R Core Team 2023), and the core components such as tidyverse (Wickham et al. 2019), knitr (Xie 2023), ggplot2 (Wickham 2016), dplyr (Wickham et al. 2023), zoo (Zeileis A, Grothendieck G 2005), and stargazer (Hlavac M 2022).
 
 ## Variables of Interest
 ```{r}
