@@ -27,8 +27,7 @@ Thus this paper highlights the trend of income inequality between time, social c
 
 # Data {#sec-data}
 ## Data source
-The data is gathered from World Inequality Database (WID) which introduces the income share by each social class over time: 2002 to 2023 in Canada. The second data is gathered from statistics Canada where the data illustrates the  Consumer Price Index (CPI) to figure out the inflation rate within each year.
-이거 수정
+The data is gathered from World Inequality Database (WID) which introduces the income share by each social class over time: 2002 to 2023 in Canada. The second data is gathered from Statistics Canada where the data illustrates the Consumer Price Index (CPI) to figure out the inflation rate within each year.
 
 ## Data mearsurement
 The dataset provides information that offers insights into the income inequality trends in Canada. The y-axis represents the income share, measured in dollars (%) while the x-axis corresponds to the years from 2002 to 2023, representing the share of pre tax total income for each year.
