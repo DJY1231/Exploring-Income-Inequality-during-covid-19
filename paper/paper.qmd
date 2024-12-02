@@ -411,4 +411,4 @@ Hlavac M. 2022. stargazer: Well-Formatted Regression and Summary Statistics Tabl
 
 Data - wid - world inequality database. WID. (n.d.). https://wid.world/data/ 
 
-
+Canada, S. (2024, January 16). Consumer price index, annual average, not seasonally adjusted. Consumer Price Index, annual average, not seasonally adjusted. https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000501 
