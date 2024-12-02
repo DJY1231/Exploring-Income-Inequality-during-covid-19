@@ -1,11 +1,11 @@
 #### Preamble ####
 # Purpose: Cleans the raw income data for analysis
-# Author: Rohan Alexander 
+# Author: Dong Jun Yoon
 # Date: 2 December, 2024
-# Contact: rohan.alexander@utoronto.ca 
+# Contact: dongjun.yoon@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: Requires the `tidyverse` and `janitor` packages
-# Any other information needed? [...UPDATE THIS...]
+# Any other information needed?
 
 #### Workspace setup ####
 library(tidyverse)
