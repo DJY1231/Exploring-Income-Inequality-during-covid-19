@@ -4,64 +4,68 @@
 # Date: December 2nd, 2024
 # Contact: dongjun.yoon@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: Requires `pandas`, `numpy`, and `matplotlib`
+# Pre-requisites: Requires `tidyverse`, `lubridate`
 # Data sources: WID Data and Income Inequality Social Class Data
 
-# Import libraries
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+# Load libraries
+library(tidyverse)
+library(lubridate)
 
 # Set seed for reproducibility
-np.random.seed(123)
+set.seed(123)
 
 # Load datasets
-wid_data = pd.read_csv('WID_Data_02122024-235921.csv', skiprows=4, sep=";")
-income_inequality = pd.read_csv('Income_inequality_social_class.csv')
+wid_data <- read_csv("WID_Data_02122024-235921.csv", skip = 4, col_names = c("Social_Class", "Year", "Share_of_total_income"), col_types = cols())
+income_inequality <- read_csv("Income_inequality_social_class.csv")
 
-# Clean and preprocess data
-wid_data.columns = ['Social_Class', 'Year', 'Share_of_total_income']
-wid_data['Year'] = wid_data['Year'].astype(int)
-wid_data['Share_of_total_income'] = wid_data['Share_of_total_income'].astype(float)
+# Data cleaning and preprocessing
+wid_data <- wid_data %>%
+  mutate(
+    Year = as.integer(Year),
+    Share_of_total_income = as.numeric(Share_of_total_income)
+  )
 
-income_inequality['Year'] = income_inequality['Year'].astype(int)
+income_inequality <- income_inequality %>%
+  mutate(
+    Year = as.integer(Year)
+  )
 
-# Combine datasets for comparison
-combined_data = pd.merge(
-    wid_data,
-    income_inequality,
-    on='Year',
-    suffixes=('_wid', '_inequality')
-)
+# Combine datasets
+combined_data <- wid_data %>%
+  inner_join(income_inequality, by = "Year", suffix = c("_wid", "_inequality"))
 
-# Simulate random income data within ranges for different social classes
-social_classes = ["Top 10%", "Top 1%", "Median Income", "Lower 10%"]
-years = combined_data['Year'].unique()
-n = len(years) * len(social_classes)
+# Simulate random income data
+social_classes <- c("Top 10%", "Top 1%", "Median Income", "Lower 10%")
+years <- unique(combined_data$Year)
 
-simulated_data = pd.DataFrame({
-    'Year': np.repeat(years, len(social_classes)),
-    'Social_Class': social_classes * len(years),
-    'Income': np.round(np.random.uniform(20000, 500000, n), 2),
-    'Share_of_total_income': np.random.uniform(0.05, 0.5, n)
-})
+simulated_data <- expand.grid(
+  Year = years,
+  Social_Class = social_classes
+) %>%
+  mutate(
+    Income = round(runif(nrow(.), 20000, 500000), 2),
+    Share_of_total_income = runif(nrow(.), 0.05, 0.5),
+    Weighted_Income = Income * Share_of_total_income
+  )
 
-# Create interactions between variables
-simulated_data['Weighted_Income'] = simulated_data['Income'] * simulated_data['Share_of_total_income']
-simulated_data['Growth_Rate'] = simulated_data.groupby('Social_Class')['Income'].pct_change().fillna(0)
+# Calculate interactions
+simulated_data <- simulated_data %>%
+  group_by(Social_Class) %>%
+  mutate(
+    Growth_Rate = round((Income / lag(Income) - 1) * 100, 2),
+    Growth_Rate = ifelse(is.na(Growth_Rate), 0, Growth_Rate)
+  )
 
 # Visualize trends over time
-plt.figure(figsize=(10, 6))
-for cls in social_classes:
-    subset = simulated_data[simulated_data['Social_Class'] == cls]
-    plt.plot(subset['Year'], subset['Income'], label=cls)
+simulated_data %>%
+  ggplot(aes(x = Year, y = Income, color = Social_Class)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Simulated Income Trends by Social Class (2000–2024)",
+    x = "Year",
+    y = "Income ($)"
+  ) +
+  theme_minimal()
 
-plt.title("Simulated Income Trends by Social Class (2000–2024)")
-plt.xlabel("Year")
-plt.ylabel("Income ($)")
-plt.legend()
-plt.show()
-
-# Save simulated data to CSV
-simulated_data.to_csv('simulated_income_data.csv', index=False)
-
+# Save simulated data
+write_csv(simulated_data, "simulated_income_data.csv")
