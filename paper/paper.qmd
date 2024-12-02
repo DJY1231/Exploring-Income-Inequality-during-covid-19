@@ -122,7 +122,7 @@ ggplot(filtered_data, aes(x = Year, y = `Income Share`, color = Social_Class, gr
         strip.text = element_text(size = 10, face = "bold")) # Style facet labels
 
 ```
-Figure 2: Income Share by Social Class during the Great Repression: 2007 to 2009 in Canada.
+Figure 2: Income Share by Social Class during the Great Recession: 2007 to 2009 in Canada.
 
 Figure 2 illustrates the trend of income distribution across different social classes in Canada from 2007 to 2009, during the Great Recession. One notable trend is the downward shift in the income share for the top 1% and top 10% of earners, alongside an upward trend in the income share for the bottom 50% of earners during this period. This trend suggests that the top 1% and top 10% groups lost a portion of their total income share during this time. Specifically, the income share of the top 1% decreased by 2.35 percentage points, from 14.21% to 11.86% of the total income pie. Similarly, the top 10% experienced a decrease of 2.5 percentage points, from 38.38% to 35.88%. This indicates that the top 10% group was economically affected more than the top 1%. In contrast, the bottom 50% showed an increase in income share, with their portion rising by 0.48 percentage points, from 16.75% to 17.23% of the total income pie.
 
