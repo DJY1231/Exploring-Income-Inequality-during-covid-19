@@ -1,44 +1,50 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans the raw income data for analysis
+# Author: Rohan Alexander 
+# Date: 2 December, 2024
+# Contact: rohan.alexander@utoronto.ca 
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
+# Pre-requisites: Requires the `tidyverse` and `janitor` packages
 # Any other information needed? [...UPDATE THIS...]
 
 #### Workspace setup ####
 library(tidyverse)
+library(janitor)
 
 #### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
 
-cleaned_data <-
-  raw_data |>
-  janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
+# Load raw WID data
+wid_data <- read_csv("inputs/data/WID_Data_02122024-235921.csv", skip = 4, 
+                     col_names = c("Social_Class", "Year", "Share_of_total_income"),
+                     col_types = cols())
+
+# Clean WID data
+wid_data_cleaned <- wid_data |>
+  clean_names() |> # Ensure consistent column naming
   mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
+    year = as.integer(year),
+    share_of_total_income = as.numeric(share_of_total_income)
   ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
+  filter(!is.na(year) & !is.na(share_of_total_income)) # Remove rows with missing values
+
+# Load raw income inequality data
+income_inequality <- read_csv("inputs/data/Income_inequality_social_class.csv")
+
+# Clean income inequality data
+income_inequality_cleaned <- income_inequality |>
+  clean_names() |> 
   mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
+    year = as.integer(year),
+    share_of_total_income = as.numeric(share_of_total_income)
   ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
-  tidyr::drop_na()
+  filter(!is.na(year) & !is.na(share_of_total_income)) # Remove rows with missing values
+
+# Merge datasets for consistency
+combined_cleaned_data <- wid_data_cleaned |>
+  inner_join(income_inequality_cleaned, by = "year", suffix = c("_wid", "_inequality"))
 
 #### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+# Save cleaned datasets
+write_csv(wid_data_cleaned, "outputs/data/wid_data_cleaned.csv")
+write_csv(income_inequality_cleaned, "outputs/data/income_inequality_cleaned.csv")
+write_csv(combined_cleaned_data, "outputs/data/combined_cleaned_data.csv")
