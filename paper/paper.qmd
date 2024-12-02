@@ -8,7 +8,6 @@ date-format: long
 abstract: "This paper examines income inequality in Canada from 2002 to 2023 using data from the World Inequality Database (WID) and Statistics Canada. The analysis explores trends in income inequality and inflation, assessing whether these disparities have increased or decreased over time. It also compares the impacts of the Great Recession (2007–2009) and the COVID-19 pandemic (2020–2023) on income disparities. Through data analysis and regression modeling, this study investigates these trends in depth. Understanding these patterns is crucial for policymakers and the government to develop effective strategies aimed at reducing inequalities within the country. This report ultimately seeks to contribute to efforts promoting social and economic equity in Canada."
 format: pdf
 number-sections: true
-bibliography: references.bib
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -127,7 +126,7 @@ Figure 2: Income Share by Social Class during the Great repression: 2007 to 2009
 
 Figure 2 illustrates the trend of income distribution across different social classes in Canada from 2007 to 2009, during the Great Recession. One notable trend is the downward shift in the income share for the top 1% and top 10% of earners, alongside an upward trend in the income share for the bottom 50% of earners during this period. This trend suggests that the top 1% and top 10% groups lost a portion of their total income share during this time. Specifically, the income share of the top 1% decreased by 2.35 percentage points, from 14.21% to 11.86% of the total income pie. Similarly, the top 10% experienced a decrease of 2.5 percentage points, from 38.38% to 35.88%. This indicates that the top 10% group was economically affected more than the top 1%. In contrast, the bottom 50% showed an increase in income share, with their portion rising by 0.48 percentage points, from 16.75% to 17.23% of the total income pie.
 
-```{r results='hide', message=FALSE, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(dplyr)
 library(zoo) # For moving averages
@@ -153,7 +152,7 @@ filtered_data <- filtered_data %>%
 # Plot with smoothed lines, moving averages, and facets
 ggplot(filtered_data, aes(x = Year, y = `Income Share`, color = Social_Class, group = Social_Class)) +
   geom_point(size = 2) + # Add points for individual data
-  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", alpha = 0.8) + # Smoothed lines for trends
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", alpha = 0.8, span = 0.75) + # Smoothed lines with adjusted span
   geom_line(aes(y = Moving_Avg), size = 1.2, linetype = "solid") + # Moving average line
   facet_wrap(~Country + Social_Class, scales = 'free_y') + # Facet by Country and Social Class
   scale_x_continuous(breaks = unique(filtered_data$Year), labels = as.character(unique(filtered_data$Year))) +
@@ -164,7 +163,6 @@ ggplot(filtered_data, aes(x = Year, y = `Income Share`, color = Social_Class, gr
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom", # Adjust legend position
         strip.text = element_text(size = 10, face = "bold")) # Style facet labels
-
 ```
 Figure 3: Income Share by Social Class during the Covid-19: 2020 to 2023 in Canada.
 
@@ -197,12 +195,13 @@ This section will discuss the multiple linear regression meodl that will be used
 ## Model set-up
 The multiple linear regression model is as follows: 
 $$
-\begin{align*}
-\text{Share_of_total_income}(Y) &= \beta_0 + \beta_1 \cdot \text{Year} + \beta_2 \cdot \text{Social_Class} \\
-&\quad + \beta_3 \cdot \text{Period} + \beta_4 \cdot (\text{Year} \times \text{Social_Class}) \\
-&\quad + \beta_5 \cdot (\text{Social_Class} \times \text{Period}) + \varepsilon
-\end{align*}
+\begin{aligned}
+\text{Share\_of\_total\_income} (Y) &= \beta_0 + \beta_1 \cdot \text{Year} + \beta_2 \cdot \text{Social\_Class} \\
+&\quad + \beta_3 \cdot \text{Period} + \beta_4 \cdot (\text{Year} \times \text{Social\_Class}) \\
+&\quad + \beta_5 \cdot (\text{Social\_Class} \times \text{Period}) + \varepsilon
+\end{aligned}
 $$
+
 ### Model justification
 We aim to model the relationship between the response variable Y, which represents the share of income for each social class, using the following components:
 
@@ -265,29 +264,40 @@ model <- lm(
   data = income_data
 )
 
-# Display the regression results in a table with all combinations included
-stargazer(model, type = "text", title = "Regression Results: Income Inequality During Great Recession and COVID-19", 
-          dep.var.labels = "Share of Total Income",
-          covariate.labels = c("Year", 
-                               "Top 1% Income", 
-                               "Top 10% Income", 
-                               "Bottom 50% Income",
-                               "Great Recession", 
-                               "COVID-19",
-                               "Other Period",
-                               "Year x Top 1% Income", 
-                               "Year x Top 10% Income", 
-                               "Year x Bottom 50% Income",
-                               "Top 1% Income x Great Recession", 
-                               "Top 10% Income x Great Recession", 
-                               "Bottom 50% Income x Great Recession",
-                               "Top 1% Income x COVID-19", 
-                               "Top 10% Income x COVID-19", 
-                               "Bottom 50% Income x COVID-19",
-                               "Top 1% Income x Other Period", 
-                               "Top 10% Income x Other Period", 
-                               "Bottom 50% Income x Other Period"),
-          omit.stat = c("f", "ser"))
+# Generate the stargazer table and filter out the citation
+# Capture the stargazer output in a variable
+stargazer_output <- capture.output(
+  stargazer(
+    model, type = "text", title = "Regression Results: Income Inequality During Great Recession and COVID-19", 
+    dep.var.labels = "Share of Total Income",
+    covariate.labels = c("Year", 
+                         "Top 1% Income", 
+                         "Top 10% Income", 
+                         "Bottom 50% Income",
+                         "Great Recession", 
+                         "COVID-19",
+                         "Other Period",
+                         "Year x Top 1% Income", 
+                         "Year x Top 10% Income", 
+                         "Year x Bottom 50% Income",
+                         "Top 1% Income x Great Recession", 
+                         "Top 10% Income x Great Recession", 
+                         "Bottom 50% Income x Great Recession",
+                         "Top 1% Income x COVID-19", 
+                         "Top 10% Income x COVID-19", 
+                         "Bottom 50% Income x COVID-19",
+                         "Top 1% Income x Other Period", 
+                         "Top 10% Income x Other Period", 
+                         "Bottom 50% Income x Other Period"),
+    omit.stat = c("f", "ser")
+  )
+)
+
+# Remove lines containing "Please cite as" or citation messages
+filtered_output <- stargazer_output[!grepl("Please cite as:", stargazer_output)]
+
+# Print the filtered output
+cat(filtered_output, sep = "\n")
 
 ```
 Table 2: Summary results for the share of total income model
@@ -351,7 +361,6 @@ Geographic Coverage: The CPI data represent a national average but include price
 Temporal Granularity: The CPI data are reported monthly, but for consistency with the WID dataset, annual averages were calculated.
 
 ## Posterior predictive check (PPC)
-
 ```{r}
 # Load necessary libraries
 library(ggplot2)
