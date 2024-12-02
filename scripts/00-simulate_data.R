@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Simulate and analyze income distribution trends and social class interactions from 2000–2024
 # Author: Dong Jun Yoon
-# Date: December 2nd, 2024
+# Date: 2 December 2, 2024
 # Contact: dongjun.yoon@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: Requires `tidyverse`, `lubridate`
